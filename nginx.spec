@@ -15,7 +15,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.12.0
-Release:           1%{?dist}
+Release:           2%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 Group:             System Environment/Daemons
@@ -429,6 +429,9 @@ fi
 
 
 %changelog
+* Sun Jun 04 2017 Jitka Plesnikova <jplesnik@redhat.com> - 1:1.12.0-2
+- Perl 5.26 rebuild
+
 * Tue May 30 2017 Luboš Uhliarik <luhliari@redhat.com> - 1:1.12.0-1
 - new version 1.12.0
 
