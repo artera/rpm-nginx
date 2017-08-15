@@ -25,7 +25,6 @@ License:           BSD
 URL:               http://nginx.org/
 
 Source0:           https://nginx.org/download/nginx-%{version}.tar.gz
-Source1:           https://nginx.org/download/nginx-%{version}.tar.gz.asc
 Source10:          nginx.service
 Source11:          nginx.logrotate
 Source12:          nginx.conf
@@ -172,12 +171,11 @@ Requires:          nginx
 %prep
 %setup -q
 %patch0 -p0
-cp %{SOURCE200} .
-cp %{SOURCE210} .
+cp %{SOURCE200} %{SOURCE210} %{SOURCE10} %{SOURCE12} .
 
-%if 0%{?rhel} < 8
-sed -i -e 's#KillMode=.*#KillMode=process#g' %{SOURCE10}
-sed -i -e 's#PROFILE=SYSTEM#HIGH:!aNULL:!MD5#' %{SOURCE12}
+%if 0%{?rhel} > 0 && 0%{?rhel} < 8
+sed -i -e 's#KillMode=.*#KillMode=process#g' nginx.service
+sed -i -e 's#PROFILE=SYSTEM#HIGH:!aNULL:!MD5#' nginx.conf
 %endif
 
 
@@ -251,7 +249,7 @@ find %{buildroot} -type f -name perllocal.pod -exec rm -f '{}' \;
 find %{buildroot} -type f -empty -exec rm -f '{}' \;
 find %{buildroot} -type f -iname '*.so' -exec chmod 0755 '{}' \;
 
-install -p -D -m 0644 %{SOURCE10} \
+install -p -D -m 0644 ./nginx.service \
     %{buildroot}%{_unitdir}/nginx.service
 install -p -D -m 0644 %{SOURCE11} \
     %{buildroot}%{_sysconfdir}/logrotate.d/nginx
@@ -267,7 +265,7 @@ install -p -d -m 0755 %{buildroot}%{_datadir}/nginx/html
 install -p -d -m 0755 %{buildroot}%{_datadir}/nginx/modules
 install -p -d -m 0755 %{buildroot}%{_libdir}/nginx/modules
 
-install -p -m 0644 %{SOURCE12} \
+install -p -m 0644 ./nginx.conf \
     %{buildroot}%{_sysconfdir}/nginx
 install -p -m 0644 %{SOURCE100} \
     %{buildroot}%{_datadir}/nginx/html
