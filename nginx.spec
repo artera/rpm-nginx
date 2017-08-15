@@ -14,8 +14,8 @@
 
 Name:              nginx
 Epoch:             1
-Version:           1.12.0
-Release:           4%{?dist}
+Version:           1.12.1
+Release:           1%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 Group:             System Environment/Daemons
@@ -24,8 +24,8 @@ Group:             System Environment/Daemons
 License:           BSD
 URL:               http://nginx.org/
 
-Source0:           http://nginx.org/download/nginx-%{version}.tar.gz
-Source1:           http://nginx.org/download/nginx-%{version}.tar.gz.asc
+Source0:           https://nginx.org/download/nginx-%{version}.tar.gz
+Source1:           https://nginx.org/download/nginx-%{version}.tar.gz.asc
 Source10:          nginx.service
 Source11:          nginx.logrotate
 Source12:          nginx.conf
@@ -226,6 +226,7 @@ export DESTDIR=%{buildroot}
     --with-http_slice_module \
     --with-http_stub_status_module \
     --with-http_perl_module=dynamic \
+    --with-http_auth_request_module \
     --with-mail=dynamic \
     --with-mail_ssl_module \
     --with-pcre \
@@ -429,6 +430,10 @@ fi
 
 
 %changelog
+* Tue Aug 15 2017 Joe Orton <jorton@redhat.com> - 1:1.12.1-1
+- update to 1.12.1 (#1469924)
+- enable http_auth_request_module (Tim Niemueller, #1471106)
+
 * Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.12.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
 
