@@ -15,7 +15,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.12.1
-Release:           1%{?dist}
+Release:           2%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 Group:             System Environment/Daemons
@@ -254,6 +254,9 @@ install -p -D -m 0644 ./nginx.service \
 install -p -D -m 0644 %{SOURCE11} \
     %{buildroot}%{_sysconfdir}/logrotate.d/nginx
 
+install -p -d -m 0755 %{buildroot}%{_sysconfdir}/systemd/system/nginx.service.d
+install -p -d -m 0755 %{buildroot}%{_unitdir}/nginx.service.d
+
 install -p -d -m 0755 %{buildroot}%{_sysconfdir}/nginx/conf.d
 install -p -d -m 0755 %{buildroot}%{_sysconfdir}/nginx/default.d
 
@@ -398,6 +401,8 @@ fi
 %dir %{_sysconfdir}/nginx
 %dir %{_sysconfdir}/nginx/conf.d
 %dir %{_sysconfdir}/nginx/default.d
+%dir %{_sysconfdir}/systemd/system/nginx.service.d
+%dir %{_unitdir}/nginx.service.d
 
 %files mod-http-geoip
 %{_datadir}/nginx/modules/mod-http-geoip.conf
@@ -428,6 +433,9 @@ fi
 
 
 %changelog
+* Tue Sep 19 2017 Remi Collet <remi@fedoraproject.org> - 1:1.12.1-2
+- own system drop-in directories #1493036
+
 * Tue Aug 15 2017 Joe Orton <jorton@redhat.com> - 1:1.12.1-1
 - update to 1.12.1 (#1469924)
 - enable http_auth_request_module (Tim Niemueller, #1471106)
