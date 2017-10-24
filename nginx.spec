@@ -2,7 +2,9 @@
 %global  nginx_user          nginx
 
 # gperftools exist only on selected arches
-%ifnarch s390 s390x
+# gperftools *detection* is failing on ppc64*, possibly only configure
+# bug, but disable anyway.
+%ifnarch s390 s390x ppc64 ppc64le
 %global with_gperftools 1
 %endif
 
