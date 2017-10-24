@@ -15,7 +15,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.12.1
-Release:           2%{?dist}
+Release:           3%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 Group:             System Environment/Daemons
@@ -433,6 +433,9 @@ fi
 
 
 %changelog
+* Tue Oct 24 2017 Joe Orton <jorton@redhat.com> - 1:1.12.1-3
+- rebuild
+
 * Tue Sep 19 2017 Remi Collet <remi@fedoraproject.org> - 1:1.12.1-2
 - own system drop-in directories #1493036
 
