@@ -17,7 +17,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.12.1
-Release:           3%{?dist}
+Release:           4%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 Group:             System Environment/Daemons
@@ -435,6 +435,9 @@ fi
 
 
 %changelog
+* Sat Jan 20 2018 Björn Esser <besser82@fedoraproject.org> - 1:1.12.1-4
+- Rebuilt for switch to libxcrypt
+
 * Tue Oct 24 2017 Joe Orton <jorton@redhat.com> - 1:1.12.1-3
 - rebuild
 
