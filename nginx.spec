@@ -17,7 +17,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.12.1
-Release:           4%{?dist}
+Release:           5%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 Group:             System Environment/Daemons
@@ -43,6 +43,11 @@ Source210:         UPGRADE-NOTES-1.6-to-1.10
 # removes -Werror in upstream build scripts.  -Werror conflicts with
 # -D_FORTIFY_SOURCE=2 causing warnings to turn into errors.
 Patch0:            nginx-auto-cc-gcc.patch
+
+# Apply fix for bug in glibc libcrypt, if needed only.
+# That has been fixed some time in glibc-2.3.X and is
+# not needed with libxcrypt anyways.
+Patch1:            0001-unix-ngx_user-Apply-fix-for-really-old-bug-in-glibc-.patch
 
 %if 0%{?with_gperftools}
 BuildRequires:     gperftools-devel
@@ -173,6 +178,7 @@ Requires:          nginx
 %prep
 %setup -q
 %patch0 -p0
+%patch1 -p1
 cp %{SOURCE200} %{SOURCE210} %{SOURCE10} %{SOURCE12} .
 
 %if 0%{?rhel} > 0 && 0%{?rhel} < 8
@@ -435,6 +441,9 @@ fi
 
 
 %changelog
+* Wed Jan 24 2018 Björn Esser <besser82@fedoraproject.org> - 1:1.12.1-5
+- Add patch to apply glibc bugfix if really needed only
+
 * Sat Jan 20 2018 Björn Esser <besser82@fedoraproject.org> - 1:1.12.1-4
 - Rebuilt for switch to libxcrypt
 
