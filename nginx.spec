@@ -1,6 +1,10 @@
 %global  _hardened_build     1
 %global  nginx_user          nginx
 
+# Disable strict symbol checks in the link editor.
+# See: https://src.fedoraproject.org/rpms/redhat-rpm-config/c/078af19
+%undefine _strict_symbol_defs_build
+
 # gperftools exist only on selected arches
 # gperftools *detection* is failing on ppc64*, possibly only configure
 # bug, but disable anyway.
@@ -443,6 +447,7 @@ fi
 %changelog
 * Wed Jan 24 2018 Björn Esser <besser82@fedoraproject.org> - 1:1.12.1-5
 - Add patch to apply glibc bugfix if really needed only
+- Disable strict symbol checks in the link editor
 
 * Sat Jan 20 2018 Björn Esser <besser82@fedoraproject.org> - 1:1.12.1-4
 - Rebuilt for switch to libxcrypt
