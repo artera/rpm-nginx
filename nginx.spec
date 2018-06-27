@@ -21,7 +21,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.12.1
-Release:           8%{?dist}
+Release:           9%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 Group:             System Environment/Daemons
@@ -450,6 +450,9 @@ fi
 
 
 %changelog
+* Wed Jun 27 2018 Jitka Plesnikova <jplesnik@redhat.com> - 1:1.12.1-9
+- Perl 5.28 rebuild
+
 * Mon May 14 2018 Luboš Uhliarik <luhliari@redhat.com> - 1:1.12.1-8
 - Related: #1573942 - nginx fails on start
 
