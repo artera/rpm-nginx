@@ -21,7 +21,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.12.1
-Release:           10%{?dist}
+Release:           11%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 Group:             System Environment/Daemons
@@ -57,6 +57,7 @@ Patch1:            0001-unix-ngx_user-Apply-fix-for-really-old-bug-in-glibc-.pat
 # previous 644
 Patch2:            nginx-1.12.1-logs-perm.patch
 
+BuildRequires:     gcc
 %if 0%{?with_gperftools}
 BuildRequires:     gperftools-devel
 %endif
@@ -450,6 +451,10 @@ fi
 
 
 %changelog
+* Mon Jul 16 2018 Tadej Janež <tadej.j@nez.si> - 1:1.12.1-11
+- Add gcc to BuildRequires to account for
+  https://fedoraproject.org/wiki/Changes/Remove_GCC_from_BuildRoot
+
 * Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.12.1-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
