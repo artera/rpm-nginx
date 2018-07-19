@@ -5,6 +5,8 @@
 # See: https://src.fedoraproject.org/rpms/redhat-rpm-config/c/078af19
 %undefine _strict_symbol_defs_build
 
+%bcond_without geoip
+
 # gperftools exist only on selected arches
 # gperftools *detection* is failing on ppc64*, possibly only configure
 # bug, but disable anyway.
@@ -21,7 +23,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.12.1
-Release:           11%{?dist}
+Release:           12%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 Group:             System Environment/Daemons
@@ -95,7 +97,9 @@ Group:             System Environment/Daemons
 Summary:           A meta package that installs all available Nginx modules
 BuildArch:         noarch
 
+%if %{with geoip}
 Requires:          nginx-mod-http-geoip = %{epoch}:%{version}-%{release}
+%endif
 Requires:          nginx-mod-http-image-filter = %{epoch}:%{version}-%{release}
 Requires:          nginx-mod-http-perl = %{epoch}:%{version}-%{release}
 Requires:          nginx-mod-http-xslt-filter = %{epoch}:%{version}-%{release}
@@ -124,6 +128,7 @@ The nginx-filesystem package contains the basic directory layout
 for the Nginx server including the correct permissions for the
 directories.
 
+%if %{with geoip}
 %package mod-http-geoip
 Group:             System Environment/Daemons
 Summary:           Nginx HTTP geoip module
@@ -133,6 +138,7 @@ Requires:          GeoIP
 
 %description mod-http-geoip
 %{summary}.
+%endif
 
 %package mod-http-image-filter
 Group:             System Environment/Daemons
@@ -231,7 +237,9 @@ if ! ./configure \
     --with-http_addition_module \
     --with-http_xslt_module=dynamic \
     --with-http_image_filter_module=dynamic \
+%if %{with geoip}
     --with-http_geoip_module=dynamic \
+%endif
     --with-http_sub_module \
     --with-http_dav_module \
     --with-http_flv_module \
@@ -316,8 +324,10 @@ for i in ftdetect indent syntax; do
         %{buildroot}%{_datadir}/vim/vimfiles/${i}/nginx.vim
 done
 
+%if %{with geoip}
 echo 'load_module "%{_libdir}/nginx/modules/ngx_http_geoip_module.so";' \
     > %{buildroot}%{_datadir}/nginx/modules/mod-http-geoip.conf
+%endif
 echo 'load_module "%{_libdir}/nginx/modules/ngx_http_image_filter_module.so";' \
     > %{buildroot}%{_datadir}/nginx/modules/mod-http-image-filter.conf
 echo 'load_module "%{_libdir}/nginx/modules/ngx_http_perl_module.so";' \
@@ -339,10 +349,12 @@ exit 0
 %post
 %systemd_post nginx.service
 
+%if %{with geoip}
 %post mod-http-geoip
 if [ $1 -eq 1 ]; then
     /usr/bin/systemctl reload nginx.service >/dev/null 2>&1 || :
 fi
+%endif
 
 %post mod-http-image-filter
 if [ $1 -eq 1 ]; then
@@ -428,9 +440,11 @@ fi
 %dir %{_sysconfdir}/systemd/system/nginx.service.d
 %dir %{_unitdir}/nginx.service.d
 
+%if %{with geoip}
 %files mod-http-geoip
 %{_datadir}/nginx/modules/mod-http-geoip.conf
 %{_libdir}/nginx/modules/ngx_http_geoip_module.so
+%endif
 
 %files mod-http-image-filter
 %{_datadir}/nginx/modules/mod-http-image-filter.conf
@@ -457,6 +471,9 @@ fi
 
 
 %changelog
+* Thu Jul 19 2018 Joe Orton <jorton@redhat.com> - 1:1.12.1-12
+- add build conditional for geoip support
+
 * Mon Jul 16 2018 Tadej Janež <tadej.j@nez.si> - 1:1.12.1-11
 - Add gcc to BuildRequires to account for
   https://fedoraproject.org/wiki/Changes/Remove_GCC_from_BuildRoot
