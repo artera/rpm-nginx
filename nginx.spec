@@ -5,7 +5,7 @@
 # See: https://src.fedoraproject.org/rpms/redhat-rpm-config/c/078af19
 %undefine _strict_symbol_defs_build
 
-%bcond_without geoip
+%bcond_with geoip
 
 # gperftools exist only on selected arches
 # gperftools *detection* is failing on ppc64*, possibly only configure
@@ -23,7 +23,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.12.1
-Release:           12%{?dist}
+Release:           13%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 Group:             System Environment/Daemons
@@ -471,6 +471,9 @@ fi
 
 
 %changelog
+* Mon Jul 30 2018 Luboš Uhliarik <luhliari@redhat.com> - 1:1.12.1-13
+- don't build with geoip by default
+
 * Thu Jul 19 2018 Joe Orton <jorton@redhat.com> - 1:1.12.1-12
 - add build conditional for geoip support
 
