@@ -23,7 +23,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.12.1
-Release:           13%{?dist}
+Release:           14%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 Group:             System Environment/Daemons
@@ -160,6 +160,7 @@ BuildRequires:     perl-generators
 BuildRequires:     perl(ExtUtils::Embed)
 Requires:          nginx
 Requires:          perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:          perl(constant)
 
 %description mod-http-perl
 %{summary}.
@@ -471,6 +472,9 @@ fi
 
 
 %changelog
+* Mon Aug 06 2018 Luboš Uhliarik <luhliari@redhat.com> - 1:1.12.1-14
+- add requires on perl(constant) for mod-http-perl
+
 * Mon Jul 30 2018 Luboš Uhliarik <luhliari@redhat.com> - 1:1.12.1-13
 - don't build with geoip by default
 
