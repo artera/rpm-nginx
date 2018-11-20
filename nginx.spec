@@ -23,7 +23,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.14.1
-Release:           1%{?dist}
+Release:           2%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 Group:             System Environment/Daemons
@@ -472,9 +472,15 @@ fi
 
 
 %changelog
-* Tue Nov 20 2018 Luboš Uhliarik <luhliari@redhat.com> - 1:1.14.1-1
+* Tue Nov 20 2018 Luboš Uhliarik <luhliari@redhat.com> - 1:1.14.12
 - new version 1.14.1
 - Resolves: #1584426 - Upstream Nginx 1.14.0 is now available
+- Resolves: #1647255 - CVE-2018-16845 nginx: Denial of service and memory
+  disclosure via mp4 module
+- Resolves: #1647259 - CVE-2018-16843 nginx: Excessive memory consumption
+  via flaw in HTTP/2 implementation
+- Resolves: #1647258 - CVE-2018-16844 nginx: Excessive CPU usage via flaw
+  in HTTP/2 implementation
 
 * Mon Aug 06 2018 Luboš Uhliarik <luhliari@redhat.com> - 1:1.12.1-14
 - add requires on perl(constant) for mod-http-perl
