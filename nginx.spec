@@ -23,7 +23,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.14.1
-Release:           2%{?dist}
+Release:           3%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 Group:             System Environment/Daemons
@@ -314,7 +314,7 @@ install -p -m 0644 %{SOURCE103} %{SOURCE104} \
 rm -f %{buildroot}%{_sysconfdir}/nginx/mime.types
 %endif
 
-install -p -D -m 0644 %{_builddir}/nginx-%{version}/man/nginx.8 \
+install -p -D -m 0644 %{_builddir}/nginx-%{version}/objs/nginx.8 \
     %{buildroot}%{_mandir}/man8/nginx.8
 
 install -p -D -m 0755 %{SOURCE13} %{buildroot}%{_bindir}/nginx-upgrade
@@ -472,7 +472,10 @@ fi
 
 
 %changelog
-* Tue Nov 20 2018 Luboš Uhliarik <luhliari@redhat.com> - 1:1.14.12
+* Tue Dec 11 2018 Joe Orton <jorton@redhat.com> - 1:1.14.1-3
+- fix unexpanded paths in nginx(8)
+
+* Tue Nov 20 2018 Luboš Uhliarik <luhliari@redhat.com> - 1:1.14.1-2
 - new version 1.14.1
 - Resolves: #1584426 - Upstream Nginx 1.14.0 is now available
 - Resolves: #1647255 - CVE-2018-16845 nginx: Denial of service and memory
