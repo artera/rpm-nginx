@@ -23,7 +23,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.14.1
-Release:           3%{?dist}
+Release:           4%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 Group:             System Environment/Daemons
@@ -472,6 +472,9 @@ fi
 
 
 %changelog
+* Mon Jan 14 2019 Björn Esser <besser82@fedoraproject.org> - 1:1.14.1-4
+- Rebuilt for libcrypt.so.2 (#1666033)
+
 * Tue Dec 11 2018 Joe Orton <jorton@redhat.com> - 1:1.14.1-3
 - fix unexpanded paths in nginx(8)
 
