@@ -23,7 +23,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.14.1
-Release:           4%{?dist}
+Release:           5%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -463,6 +463,9 @@ fi
 
 
 %changelog
+* Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.14.1-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
+
 * Mon Jan 14 2019 Björn Esser <besser82@fedoraproject.org> - 1:1.14.1-4
 - Rebuilt for libcrypt.so.2 (#1666033)
 
