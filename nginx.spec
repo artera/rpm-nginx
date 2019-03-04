@@ -22,8 +22,8 @@
 
 Name:              nginx
 Epoch:             1
-Version:           1.14.1
-Release:           5%{?dist}
+Version:           1.15.9
+Release:           1%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -49,11 +49,6 @@ Source210:         UPGRADE-NOTES-1.6-to-1.10
 # -D_FORTIFY_SOURCE=2 causing warnings to turn into errors.
 Patch0:            nginx-auto-cc-gcc.patch
 
-# Apply fix for bug in glibc libcrypt, if needed only.
-# That has been fixed some time in glibc-2.3.X and is
-# not needed with libxcrypt anyways.
-Patch1:            0001-unix-ngx_user-Apply-fix-for-really-old-bug-in-glibc-.patch
-
 # downstream patch - changing logs permissions to 664 instead
 # previous 644
 Patch2:            nginx-1.12.1-logs-perm.patch
@@ -68,7 +63,7 @@ BuildRequires:     zlib-devel
 
 Requires:          nginx-filesystem = %{epoch}:%{version}-%{release}
 
-%if 0%{?rhel} || 0%{?fedora} < 24
+%if 0%{?rhel} > 0 && 0%{?rhel} < 8
 # Introduced at 1:1.10.0-1 to ease upgrade path. To be removed later.
 Requires:          nginx-all-modules = %{epoch}:%{version}-%{release}
 %endif
@@ -105,15 +100,7 @@ Requires:          nginx-mod-mail = %{epoch}:%{version}-%{release}
 Requires:          nginx-mod-stream = %{epoch}:%{version}-%{release}
 
 %description all-modules
-%{summary}.
-%if 0%{?rhel}
-The main nginx package depends on this to ease the upgrade path. After a grace
-period of several months, modules will become optional.
-%endif
-%if 0%{?fedora} && 0%{?fedora} < 24
-The main nginx package depends on this to ease the upgrade path. Starting from
-Fedora 24, modules are optional.
-%endif
+Meta package that installs all available nginx modules.
 
 %package filesystem
 Summary:           The basic directory layout for the Nginx server
@@ -185,7 +172,6 @@ Requires:          nginx
 %prep
 %setup -q
 %patch0 -p0
-%patch1 -p1
 %patch2 -p1
 cp %{SOURCE200} %{SOURCE210} %{SOURCE10} %{SOURCE12} .
 
@@ -226,6 +212,7 @@ if ! ./configure \
     --with-http_ssl_module \
     --with-http_v2_module \
     --with-http_realip_module \
+    --with-stream_ssl_preread_module \
     --with-http_addition_module \
     --with-http_xslt_module=dynamic \
     --with-http_image_filter_module=dynamic \
@@ -463,6 +450,11 @@ fi
 
 
 %changelog
+* Mon Mar 04 2019 Jamie Nguyen <jamielinux@fedoraproject.org> - 1:1.15.9-1
+- Update to upstream release 1.15.9
+- Enable ngx_stream_ssl_preread module
+- Remove redundant conditionals
+
 * Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.14.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
