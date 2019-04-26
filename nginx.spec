@@ -22,7 +22,7 @@
 
 Name:              nginx
 Epoch:             1
-Version:           1.15.9
+Version:           1.16.0
 Release:           1%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
@@ -450,6 +450,9 @@ fi
 
 
 %changelog
+* Fri Apr 26 2019 Jamie Nguyen <jamielinux@fedoraproject.org> - 1:1.16.0-1
+- Update to upstream release 1.16.0
+
 * Mon Mar 04 2019 Jamie Nguyen <jamielinux@fedoraproject.org> - 1:1.15.9-1
 - Update to upstream release 1.15.9
 - Enable ngx_stream_ssl_preread module
