@@ -298,7 +298,7 @@ install -p -D -m 0644 %{_builddir}/nginx-%{version}/objs/nginx.8 \
 install -p -D -m 0755 %{SOURCE13} %{buildroot}%{_bindir}/nginx-upgrade
 install -p -D -m 0644 %{SOURCE14} %{buildroot}%{_mandir}/man8/nginx-upgrade.8
 
-for i in ftdetect indent syntax; do
+for i in ftdetect ftplugin indent syntax; do
     install -p -D -m644 contrib/vim/${i}/nginx.vim \
         %{buildroot}%{_datadir}/vim/vimfiles/${i}/nginx.vim
 done
