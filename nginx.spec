@@ -23,7 +23,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.16.0
-Release:           1%{?dist}
+Release:           2%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -379,6 +379,7 @@ fi
 %{_bindir}/nginx-upgrade
 %{_sbindir}/nginx
 %{_datadir}/vim/vimfiles/ftdetect/nginx.vim
+%{_datadir}/vim/vimfiles/ftplugin/nginx.vim
 %{_datadir}/vim/vimfiles/syntax/nginx.vim
 %{_datadir}/vim/vimfiles/indent/nginx.vim
 %{_mandir}/man3/nginx.3pm*
@@ -450,6 +451,9 @@ fi
 
 
 %changelog
+* Tue May 07 2019 Jamie Nguyen <jamielinux@fedoraproject.org> - 1:1.16.0-2
+- Add missing directory for vim plugin
+
 * Fri Apr 26 2019 Jamie Nguyen <jamielinux@fedoraproject.org> - 1:1.16.0-1
 - Update to upstream release 1.16.0
 
