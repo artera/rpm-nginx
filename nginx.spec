@@ -23,7 +23,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.16.0
-Release:           2%{?dist}
+Release:           3%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -37,8 +37,6 @@ Source11:          nginx.logrotate
 Source12:          nginx.conf
 Source13:          nginx-upgrade
 Source14:          nginx-upgrade.8
-Source100:         index.html
-Source101:         poweredby.png
 Source102:         nginx-logo.png
 Source103:         404.html
 Source104:         50x.html
@@ -62,6 +60,7 @@ BuildRequires:     pcre-devel
 BuildRequires:     zlib-devel
 
 Requires:          nginx-filesystem = %{epoch}:%{version}-%{release}
+Requires:          system-logos-httpd
 
 %if 0%{?rhel} > 0 && 0%{?rhel} < 8
 # Introduced at 1:1.10.0-1 to ease upgrade path. To be removed later.
@@ -281,10 +280,19 @@ install -p -d -m 0755 %{buildroot}%{_libdir}/nginx/modules
 
 install -p -m 0644 ./nginx.conf \
     %{buildroot}%{_sysconfdir}/nginx
-install -p -m 0644 %{SOURCE100} \
+
+rm -f %{buildroot}%{_datadir}/nginx/html/index.html
+ln -s ../../fedora-testpage/index.html \
+      %{buildroot}%{_datadir}/nginx/html/index.html
+install -p -m 0644 %{SOURCE102} \
     %{buildroot}%{_datadir}/nginx/html
-install -p -m 0644 %{SOURCE101} %{SOURCE102} \
-    %{buildroot}%{_datadir}/nginx/html
+ln -s nginx-logo.png %{buildroot}%{_datadir}/nginx/html/poweredby.png
+mkdir -p %{buildroot}%{_datadir}/nginx/html/icons
+
+# Symlink for the powered-by-$DISTRO image:
+ln -s ../../../pixmaps/poweredby.png \
+      %{buildroot}%{_datadir}/nginx/html/icons/poweredby.png
+
 install -p -m 0644 %{SOURCE103} %{SOURCE104} \
     %{buildroot}%{_datadir}/nginx/html
 
@@ -451,6 +459,10 @@ fi
 
 
 %changelog
+* Tue May 14 2019 Stephen Gallagher <sgallagh@redhat.com> - 1.16.0-3
+- Move to common default index.html
+- Resolves: rhbz#1636235
+
 * Tue May 07 2019 Jamie Nguyen <jamielinux@fedoraproject.org> - 1:1.16.0-2
 - Add missing directory for vim plugin
 
