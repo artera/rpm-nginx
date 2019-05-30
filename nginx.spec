@@ -23,7 +23,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.16.0
-Release:           3%{?dist}
+Release:           4%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -459,6 +459,9 @@ fi
 
 
 %changelog
+* Thu May 30 2019 Jitka Plesnikova <jplesnik@redhat.com> - 1:1.16.0-4
+- Perl 5.30 rebuild
+
 * Tue May 14 2019 Stephen Gallagher <sgallagh@redhat.com> - 1.16.0-3
 - Move to common default index.html
 - Resolves: rhbz#1636235
