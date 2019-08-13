@@ -22,8 +22,8 @@
 
 Name:              nginx
 Epoch:             1
-Version:           1.16.0
-Release:           5%{?dist}
+Version:           1.16.1
+Release:           1%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -459,6 +459,10 @@ fi
 
 
 %changelog
+* Tue Aug 13 2019 Jamie Nguyen <jamielinux@fedoraproject.org> - 1:1.16.1-1
+- Update to upstream release 1.16.1
+- Fixes CVE-2019-9511, CVE-2019-9513, CVE-2019-9516
+
 * Thu Jul 25 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.16.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
