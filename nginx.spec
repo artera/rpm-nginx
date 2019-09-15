@@ -16,7 +16,7 @@
 
 %global with_aio 1
 
-%if 0%{?fedora} > 22
+%if 0%{?fedora} > 22 || 0%{?rhel} >= 8
 %global with_mailcap_mimetypes 1
 %endif
 
@@ -60,7 +60,16 @@ BuildRequires:     pcre-devel
 BuildRequires:     zlib-devel
 
 Requires:          nginx-filesystem = %{epoch}:%{version}-%{release}
+%if 0%{?el7}
+# centos-logos el7 does not provide 'system-indexhtml'
+Requires:          system-logos redhat-indexhtml
+# need to remove epel7 geoip sub-package, doesn't work anymore
+# https://bugzilla.redhat.com/show_bug.cgi?id=1576034
+# https://bugzilla.redhat.com/show_bug.cgi?id=1664957
+Obsoletes:         nginx-mod-http-geoip <= 1:1.16
+%else
 Requires:          system-logos-httpd
+%endif
 
 %if 0%{?rhel} > 0 && 0%{?rhel} < 8
 # Introduced at 1:1.10.0-1 to ease upgrade path. To be removed later.
@@ -134,7 +143,7 @@ Requires:          gd
 %package mod-http-perl
 Summary:           Nginx HTTP perl module
 BuildRequires:     perl-devel
-%if 0%{?fedora} >= 24
+%if 0%{?fedora} >= 24 || 0%{?rhel} >= 7
 BuildRequires:     perl-generators
 %endif
 BuildRequires:     perl(ExtUtils::Embed)
@@ -282,8 +291,17 @@ install -p -m 0644 ./nginx.conf \
     %{buildroot}%{_sysconfdir}/nginx
 
 rm -f %{buildroot}%{_datadir}/nginx/html/index.html
+%if 0%{?el7}
+ln -s ../../doc/HTML/index.html \
+      %{buildroot}%{_datadir}/nginx/html/index.html
+ln -s ../../doc/HTML/img \
+      %{buildroot}%{_datadir}/nginx/html/img
+ln -s ../../doc/HTML/en-US \
+      %{buildroot}%{_datadir}/nginx/html/en-US
+%else
 ln -s ../../fedora-testpage/index.html \
       %{buildroot}%{_datadir}/nginx/html/index.html
+%endif
 install -p -m 0644 %{SOURCE102} \
     %{buildroot}%{_datadir}/nginx/html
 ln -s nginx-logo.png %{buildroot}%{_datadir}/nginx/html/poweredby.png
@@ -459,6 +477,9 @@ fi
 
 
 %changelog
+* Sun Sep 15 2019 Warren Togami <warren@blockstream.com>
+- add conditionals for EPEL7, see rhbz#1750857
+
 * Tue Aug 13 2019 Jamie Nguyen <jamielinux@fedoraproject.org> - 1:1.16.1-1
 - Update to upstream release 1.16.1
 - Fixes CVE-2019-9511, CVE-2019-9513, CVE-2019-9516
