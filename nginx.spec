@@ -23,7 +23,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.16.1
-Release:           1%{?dist}
+Release:           2%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -477,6 +477,9 @@ fi
 
 
 %changelog
+* Wed Jan 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.16.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
+
 * Sun Sep 15 2019 Warren Togami <warren@blockstream.com>
 - add conditionals for EPEL7, see rhbz#1750857
 
