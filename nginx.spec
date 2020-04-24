@@ -16,22 +16,29 @@
 
 %global with_aio 1
 
-%if 0%{?fedora} > 22 || 0%{?rhel} >= 8
+%if 0%{?fedora} > 22
 %global with_mailcap_mimetypes 1
 %endif
 
 Name:              nginx
 Epoch:             1
-Version:           1.16.1
-Release:           2%{?dist}
+Version:           1.18.0
+Release:           1%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
 # http://www.freebsd.org/copyright/freebsd-license.html
 License:           BSD
-URL:               http://nginx.org/
+URL:               https://nginx.org
 
 Source0:           https://nginx.org/download/nginx-%{version}.tar.gz
+Source1:           https://nginx.org/download/nginx-%{version}.tar.gz.asc
+# Keys are found here: https://nginx.org/en/pgp_keys.html
+Source2:           https://nginx.org/keys/aalexeev.key
+Source3:           https://nginx.org/keys/is.key
+Source4:           https://nginx.org/keys/maxim.key
+Source5:           https://nginx.org/keys/mdounin.key
+Source6:           https://nginx.org/keys/sb.key
 Source10:          nginx.service
 Source11:          nginx.logrotate
 Source12:          nginx.conf
@@ -52,6 +59,7 @@ Patch0:            nginx-auto-cc-gcc.patch
 Patch2:            nginx-1.12.1-logs-perm.patch
 
 BuildRequires:     gcc
+BuildRequires:     gnupg2
 %if 0%{?with_gperftools}
 BuildRequires:     gperftools-devel
 %endif
@@ -83,6 +91,7 @@ Requires(pre):     nginx-filesystem
 Requires:          nginx-mimetypes
 %endif
 Provides:          webserver
+Recommends:        logrotate
 
 BuildRequires:     systemd
 Requires(post):    systemd
@@ -178,6 +187,9 @@ Requires:          nginx
 
 
 %prep
+# Combine all keys from upstream into one file
+cat %{S:2} %{S:3} %{S:4} %{S:5} %{S:6} > %{_builddir}/%{name}.gpg
+%{gpgverify} --keyring='%{_builddir}/%{name}.gpg' --signature='%{SOURCE1}' --data='%{SOURCE0}'
 %setup -q
 %patch0 -p0
 %patch2 -p1
@@ -477,6 +489,14 @@ fi
 
 
 %changelog
+* Fri Apr 24 2020 Felix Kaechele <heffer@fedoraproject.org> - 1:1.18.0-1
+- Update to 1.18.0
+- Increased types_hash_max_size to 4096 in default config
+- Add gpg source verification
+- Add Recommends: logrotate
+- Drop location / from default config (rhbz#1564768)
+- Drop default_sever from default config (rhbz#1373822)
+
 * Wed Jan 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.16.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 
