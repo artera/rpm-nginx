@@ -58,6 +58,7 @@ Patch0:            nginx-auto-cc-gcc.patch
 # previous 644
 Patch2:            nginx-1.12.1-logs-perm.patch
 
+BuildRequires: make
 BuildRequires:     gcc
 BuildRequires:     gnupg2
 %if 0%{?with_gperftools}
