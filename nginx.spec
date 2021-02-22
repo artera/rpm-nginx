@@ -7,11 +7,17 @@
 
 %bcond_with geoip
 
+# nginx gperftools support should be dissabled for RHEL >= 8
+# see: https://bugzilla.redhat.com/show_bug.cgi?id=1931402
+%if 0%{?rhel} >= 8
+%global with_gperftools 0
+%else
 # gperftools exist only on selected arches
 # gperftools *detection* is failing on ppc64*, possibly only configure
 # bug, but disable anyway.
 %ifnarch s390 s390x ppc64 ppc64le
 %global with_gperftools 1
+%endif
 %endif
 
 %global with_aio 1
@@ -23,7 +29,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.18.0
-Release:           4%{?dist}
+Release:           5%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -490,6 +496,9 @@ fi
 
 
 %changelog
+* Mon Feb 22 2021 Lubos Uhliarik <luhliari@redhat.com> - 1:1.18.0-5
+- Resolves: #1931402 - drop gperftools module
+
 * Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.18.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
