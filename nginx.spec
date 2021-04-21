@@ -29,7 +29,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.20.0
-Release:           1%{?dist}
+Release:           2%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -58,13 +58,9 @@ Source210:         UPGRADE-NOTES-1.6-to-1.10
 # -D_FORTIFY_SOURCE=2 causing warnings to turn into errors.
 Patch0:            0001-remove-Werror-in-upstream-build-scripts.patch
 
-# downstream patch - changing logs permissions to 664 instead
-# previous 644
-Patch1:            0002-change-logs-permissions-to-664.patch
-
 # downstream patch - fix PIDFile race condition (rhbz#1869026)
 # rejected upstream: https://trac.nginx.org/nginx/ticket/1897
-Patch2:            0003-fix-PIDFile-handling.patch
+Patch1:            0002-fix-PIDFile-handling.patch
 
 BuildRequires:     make
 BuildRequires:     gcc
@@ -72,8 +68,12 @@ BuildRequires:     gnupg2
 %if 0%{?with_gperftools}
 BuildRequires:     gperftools-devel
 %endif
+%if 0%{?fedora} || 0%{?rhel} >= 8
 BuildRequires:     openssl-devel
-BuildRequires:     pcre2-devel
+%else
+BuildRequires:     openssl11-devel
+%endif
+BuildRequires:     pcre-devel
 BuildRequires:     zlib-devel
 
 Requires:          nginx-filesystem = %{epoch}:%{version}-%{release}
@@ -88,11 +88,6 @@ Obsoletes:         nginx-mod-http-geoip <= 1:1.16
 Requires:          system-logos-httpd
 %endif
 
-%if 0%{?rhel} > 0 && 0%{?rhel} < 8
-# Introduced at 1:1.10.0-1 to ease upgrade path. To be removed later.
-Requires:          nginx-all-modules = %{epoch}:%{version}-%{release}
-%endif
-
 Requires:          openssl
 Requires:          pcre
 Requires(pre):     nginx-filesystem
@@ -100,7 +95,9 @@ Requires(pre):     nginx-filesystem
 Requires:          nginx-mimetypes
 %endif
 Provides:          webserver
+%if 0%{?fedora} || 0%{?rhel} >= 8
 Recommends:        logrotate
+%endif
 
 BuildRequires:     systemd
 Requires(post):    systemd
@@ -207,6 +204,13 @@ sed -i -e 's#KillMode=.*#KillMode=process#g' nginx.service
 sed -i -e 's#PROFILE=SYSTEM#HIGH:!aNULL:!MD5#' nginx.conf
 %endif
 
+%if 0%{?rhel} == 7
+sed \
+  -e 's|\(ngx_feature_path=\)$|\1%{_includedir}/openssl11|' \
+  -e 's|\(ngx_feature_libs="\)|\1-L%{_libdir}/openssl11 |' \
+  -i auto/lib/openssl/conf
+%endif
+
 
 %build
 # nginx does not utilize a standard configure script.  It has its own
@@ -262,7 +266,6 @@ if ! ./configure \
     --with-http_sub_module \
     --with-http_v2_module \
     --with-http_xslt_module=dynamic \
-    --with-ipv6 \
     --with-mail=dynamic \
     --with-mail_ssl_module \
     --with-pcre \
@@ -453,7 +456,7 @@ fi
 %config(noreplace) %{_sysconfdir}/logrotate.d/nginx
 %attr(770,%{nginx_user},root) %dir %{_localstatedir}/lib/nginx
 %attr(770,%{nginx_user},root) %dir %{_localstatedir}/lib/nginx/tmp
-%attr(770,%{nginx_user},root) %dir %{_localstatedir}/log/nginx
+%dir %{_localstatedir}/log/nginx
 %dir %{_libdir}/nginx/modules
 
 %files all-modules
@@ -498,6 +501,15 @@ fi
 
 
 %changelog
+* Wed Apr 21 2021 Felix Kaechele <heffer@fedoraproject.org> - 1:1.20.0-2
+- sync rawhide and EPEL7 spec files again
+- systemd service reload now checks config file (rhbz#1565377)
+- drop nginx requirement on nginx-all-modules (rhbz#1708799)
+- let nginx handle log creation on logrotate (rhbz#1683388)
+- have log directory owned by root (rhbz#1390183, CVE-2016-1247)
+- remove obsolete --with-ipv6 (src PR#8)
+- correction: pcre2 is actually not supported by nginx, reintroduce pcre
+
 * Wed Apr 21 2021 Felix Kaechele <heffer@fedoraproject.org> - 1:1.20.0-1
 - update to 1.20.0
 - sync with mainline spec file

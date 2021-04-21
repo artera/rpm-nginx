@@ -1,7 +1,7 @@
-From 5cfdf8607de1113d1dbbe1018030dc58aa7bbc0a Mon Sep 17 00:00:00 2001
+From 62470498cca9a209aa9904668c1949f5229123af Mon Sep 17 00:00:00 2001
 From: Felix Kaechele <felix@kaechele.ca>
 Date: Tue, 20 Apr 2021 21:28:18 -0400
-Subject: [PATCH 3/3] fix PIDFile handling
+Subject: [PATCH 2/2] fix PIDFile handling
 
 Corresponding RHBZ: https://bugzilla.redhat.com/show_bug.cgi?id=1869026
 
