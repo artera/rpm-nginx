@@ -28,8 +28,8 @@
 
 Name:              nginx
 Epoch:             1
-Version:           1.18.0
-Release:           5%{?dist}
+Version:           1.20.0
+Release:           1%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -40,11 +40,9 @@ URL:               https://nginx.org
 Source0:           https://nginx.org/download/nginx-%{version}.tar.gz
 Source1:           https://nginx.org/download/nginx-%{version}.tar.gz.asc
 # Keys are found here: https://nginx.org/en/pgp_keys.html
-Source2:           https://nginx.org/keys/aalexeev.key
-Source3:           https://nginx.org/keys/is.key
-Source4:           https://nginx.org/keys/maxim.key
-Source5:           https://nginx.org/keys/mdounin.key
-Source6:           https://nginx.org/keys/sb.key
+Source2:           https://nginx.org/keys/maxim.key
+Source3:           https://nginx.org/keys/mdounin.key
+Source4:           https://nginx.org/keys/sb.key
 Source10:          nginx.service
 Source11:          nginx.logrotate
 Source12:          nginx.conf
@@ -58,20 +56,24 @@ Source210:         UPGRADE-NOTES-1.6-to-1.10
 
 # removes -Werror in upstream build scripts.  -Werror conflicts with
 # -D_FORTIFY_SOURCE=2 causing warnings to turn into errors.
-Patch0:            nginx-auto-cc-gcc.patch
+Patch0:            0001-remove-Werror-in-upstream-build-scripts.patch
 
 # downstream patch - changing logs permissions to 664 instead
 # previous 644
-Patch2:            nginx-1.12.1-logs-perm.patch
+Patch1:            0002-change-logs-permissions-to-664.patch
 
-BuildRequires: make
+# downstream patch - fix PIDFile race condition (rhbz#1869026)
+# rejected upstream: https://trac.nginx.org/nginx/ticket/1897
+Patch2:            0003-fix-PIDFile-handling.patch
+
+BuildRequires:     make
 BuildRequires:     gcc
 BuildRequires:     gnupg2
 %if 0%{?with_gperftools}
 BuildRequires:     gperftools-devel
 %endif
 BuildRequires:     openssl-devel
-BuildRequires:     pcre-devel
+BuildRequires:     pcre2-devel
 BuildRequires:     zlib-devel
 
 Requires:          nginx-filesystem = %{epoch}:%{version}-%{release}
@@ -195,11 +197,9 @@ Requires:          nginx
 
 %prep
 # Combine all keys from upstream into one file
-cat %{S:2} %{S:3} %{S:4} %{S:5} %{S:6} > %{_builddir}/%{name}.gpg
+cat %{S:2} %{S:3} %{S:4} > %{_builddir}/%{name}.gpg
 %{gpgverify} --keyring='%{_builddir}/%{name}.gpg' --signature='%{SOURCE1}' --data='%{SOURCE0}'
-%setup -q
-%patch0 -p0
-%patch2 -p1
+%autosetup -p1
 cp %{SOURCE200} %{SOURCE210} %{SOURCE10} %{SOURCE12} .
 
 %if 0%{?rhel} > 0 && 0%{?rhel} < 8
@@ -232,43 +232,45 @@ if ! ./configure \
     --lock-path=/run/lock/subsys/nginx \
     --user=%{nginx_user} \
     --group=%{nginx_user} \
+    --with-compat \
+    --with-debug \
 %if 0%{?with_aio}
     --with-file-aio \
 %endif
-    --with-ipv6 \
-    --with-http_ssl_module \
-    --with-http_v2_module \
-    --with-http_realip_module \
-    --with-stream_ssl_preread_module \
+%if 0%{?with_gperftools}
+    --with-google_perftools_module \
+%endif
     --with-http_addition_module \
-    --with-http_xslt_module=dynamic \
-    --with-http_image_filter_module=dynamic \
+    --with-http_auth_request_module \
+    --with-http_dav_module \
+    --with-http_degradation_module \
+    --with-http_flv_module \
 %if %{with geoip}
     --with-http_geoip_module=dynamic \
 %endif
-    --with-http_sub_module \
-    --with-http_dav_module \
-    --with-http_flv_module \
-    --with-http_mp4_module \
     --with-http_gunzip_module \
     --with-http_gzip_static_module \
-    --with-http_random_index_module \
-    --with-http_secure_link_module \
-    --with-http_degradation_module \
-    --with-http_slice_module \
-    --with-http_stub_status_module \
+    --with-http_image_filter_module=dynamic \
+    --with-http_mp4_module \
     --with-http_perl_module=dynamic \
-    --with-http_auth_request_module \
+    --with-http_random_index_module \
+    --with-http_realip_module \
+    --with-http_secure_link_module \
+    --with-http_slice_module \
+    --with-http_ssl_module \
+    --with-http_stub_status_module \
+    --with-http_sub_module \
+    --with-http_v2_module \
+    --with-http_xslt_module=dynamic \
+    --with-ipv6 \
     --with-mail=dynamic \
     --with-mail_ssl_module \
     --with-pcre \
     --with-pcre-jit \
     --with-stream=dynamic \
     --with-stream_ssl_module \
-%if 0%{?with_gperftools}
-    --with-google_perftools_module \
-%endif
-    --with-debug \
+    --with-stream_ssl_preread_module \
+    --with-threads \
     --with-cc-opt="%{optflags} $(pcre-config --cflags)" \
     --with-ld-opt="$nginx_ldopts"; then
   : configure failed
@@ -276,11 +278,11 @@ if ! ./configure \
   exit 1
 fi
 
-make %{?_smp_mflags}
+%make_build
 
 
 %install
-make install DESTDIR=%{buildroot} INSTALLDIRS=vendor
+%make_install INSTALLDIRS=vendor
 
 find %{buildroot} -type f -name .packlist -exec rm -f '{}' \;
 find %{buildroot} -type f -name perllocal.pod -exec rm -f '{}' \;
@@ -496,6 +498,15 @@ fi
 
 
 %changelog
+* Wed Apr 21 2021 Felix Kaechele <heffer@fedoraproject.org> - 1:1.20.0-1
+- update to 1.20.0
+- sync with mainline spec file
+- order configure options alphabetically for easier comparinggit
+- add --with-compat option (rhbz#1834452)
+- add patch to fix PIDFile race condition (rhbz#1869026)
+- use pcre2 instead of pcre (rhbz#1938984)
+- add Wants=network-online.target to systemd unit (rhbz#1943779)
+
 * Mon Feb 22 2021 Lubos Uhliarik <luhliari@redhat.com> - 1:1.18.0-5
 - Resolves: #1931402 - drop gperftools module
 
