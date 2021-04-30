@@ -29,7 +29,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.20.0
-Release:           2%{?dist}
+Release:           3%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -323,7 +323,7 @@ ln -s ../../doc/HTML/img \
 ln -s ../../doc/HTML/en-US \
       %{buildroot}%{_datadir}/nginx/html/en-US
 %else
-ln -s ../../fedora-testpage/index.html \
+ln -s ../../testpage/index.html \
       %{buildroot}%{_datadir}/nginx/html/index.html
 %endif
 install -p -m 0644 %{SOURCE102} \
@@ -501,6 +501,9 @@ fi
 
 
 %changelog
+* Fri Apr 30 2021 Lubos Uhliarik <luhliari@redhat.com> - 1:1.20.0-3
+- Related: #1636235 - centralizing default index.html on nginx
+
 * Wed Apr 21 2021 Felix Kaechele <heffer@fedoraproject.org> - 1:1.20.0-2
 - sync rawhide and EPEL7 spec files again
 - systemd service reload now checks config file (rhbz#1565377)
