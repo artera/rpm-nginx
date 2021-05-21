@@ -29,7 +29,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.20.0
-Release:           3%{?dist}
+Release:           4%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -501,6 +501,9 @@ fi
 
 
 %changelog
+* Fri May 21 2021 Jitka Plesnikova <jplesnik@redhat.com> - 1:1.20.0-4
+- Perl 5.34 rebuild
+
 * Fri Apr 30 2021 Lubos Uhliarik <luhliari@redhat.com> - 1:1.20.0-3
 - Related: #1636235 - centralizing default index.html on nginx
 
