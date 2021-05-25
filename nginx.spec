@@ -28,8 +28,8 @@
 
 Name:              nginx
 Epoch:             1
-Version:           1.20.0
-Release:           4%{?dist}
+Version:           1.20.1
+Release:           1%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -501,6 +501,9 @@ fi
 
 
 %changelog
+* Tue May 25 2021 Felix Kaechele <heffer@fedoraproject.org> - 1:1.20.1-1
+- update to 1.20.1 (fixes CVE-2021-23017)
+
 * Fri May 21 2021 Jitka Plesnikova <jplesnik@redhat.com> - 1:1.20.0-4
 - Perl 5.34 rebuild
 
