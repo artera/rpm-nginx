@@ -29,7 +29,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.20.1
-Release:           2%{?dist}
+Release:           3%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -61,6 +61,9 @@ Patch0:            0001-remove-Werror-in-upstream-build-scripts.patch
 # downstream patch - fix PIDFile race condition (rhbz#1869026)
 # rejected upstream: https://trac.nginx.org/nginx/ticket/1897
 Patch1:            0002-fix-PIDFile-handling.patch
+
+# Fix for CVE-2021-3618: ALPACA: Application Layer Protocol Confusion - Analyzing and Mitigating Cracks in TLS Authentication
+Patch2:            http://hg.nginx.org/nginx/raw-rev/ec1071830799
 
 BuildRequires:     make
 BuildRequires:     gcc
@@ -503,6 +506,9 @@ fi
 
 
 %changelog
+* Fri Jun 25 2021 Felix Kaechele <heffer@fedoraproject.org> - 1:1.20.1-3
+- fix for CVE-2021-3618 (rhbz#1975651)
+
 * Tue Jun 01 2021 Felix Kaechele <heffer@fedoraproject.org> - 1:1.20.1-2
 - use different fix for rhbz#1683388 as it introduced permissions issues in 1:1.20.0-2
 
