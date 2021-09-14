@@ -41,7 +41,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.20.1
-Release:           6%{?dist}
+Release:           7%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -578,6 +578,9 @@ fi
 
 
 %changelog
+* Tue Sep 14 2021 Sahana Prasad <sahana@redhat.com> - 1:1.20.1-7
+- Rebuilt with OpenSSL 3.0.0
+
 * Tue Aug 10 2021 Neal Gompa <ngompa@datto.com> - 1:1.20.1-6
 - Add -mod-devel subpackage for building external nginx modules (rhbz#1989778)
 
