@@ -41,7 +41,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.20.1
-Release:           7%{?dist}
+Release:           8%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -578,6 +578,9 @@ fi
 
 
 %changelog
+* Mon Oct 18 2021 Felix Kaechele <heffer@fedoraproject.org> - 1:1.20.1-8
+- Fix "file size changed while zipping" when rotating logs (rhbz#1980948,2015249,2015243)
+
 * Tue Sep 14 2021 Sahana Prasad <sahana@redhat.com> - 1:1.20.1-7
 - Rebuilt with OpenSSL 3.0.0
 
