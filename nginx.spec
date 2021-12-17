@@ -40,8 +40,8 @@
 
 Name:              nginx
 Epoch:             1
-Version:           1.20.1
-Release:           9%{?dist}
+Version:           1.20.2
+Release:           1%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -578,6 +578,9 @@ fi
 
 
 %changelog
+* Fri Dec 17 2021 Felix Kaechele <heffer@fedoraproject.org> - 1:1.20.2-1
+- update to 1.20.2
+
 * Mon Oct 18 2021 Felix Kaechele <heffer@fedoraproject.org> - 1:1.20.1-9
 - fix installation of nginxmods.attr for EPEL 7
 
