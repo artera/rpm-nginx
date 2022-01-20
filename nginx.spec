@@ -41,7 +41,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.20.2
-Release:           1%{?dist}
+Release:           2%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -578,6 +578,9 @@ fi
 
 
 %changelog
+* Thu Jan 20 2022 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.20.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
+
 * Fri Dec 17 2021 Felix Kaechele <heffer@fedoraproject.org> - 1:1.20.2-1
 - update to 1.20.2
 
