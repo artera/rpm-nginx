@@ -41,7 +41,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.20.2
-Release:           2%{?dist}
+Release:           3%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -107,14 +107,11 @@ Requires:          system-logos-httpd
 
 Requires:          openssl
 Requires:          pcre
-Requires(pre):     nginx-filesystem
-%if 0%{?with_mailcap_mimetypes}
-Requires:          nginx-mimetypes
-%endif
 Provides:          webserver
 %if 0%{?fedora} || 0%{?rhel} >= 8
 Recommends:        logrotate
 %endif
+Requires:          %{name}-core = %{epoch}:%{version}-%{release}
 
 BuildRequires:     systemd
 Requires(post):    systemd
@@ -127,6 +124,16 @@ Provides:          nginx(abi) = %{nginx_abiversion}
 Nginx is a web server and a reverse proxy server for HTTP, SMTP, POP3 and
 IMAP protocols, with a strong focus on high concurrency, performance and low
 memory usage.
+
+%package core
+Summary: nginx minimal core
+%if 0%{?with_mailcap_mimetypes}
+Requires:          nginx-mimetypes
+%endif
+Requires(pre):     nginx-filesystem
+
+%description core
+nginx minimal core
 
 %package all-modules
 Summary:           A meta package that installs all available Nginx modules
@@ -489,14 +496,11 @@ if [ $1 -ge 1 ]; then
 fi
 
 %files
-%license LICENSE
-%doc CHANGES README README.dynamic
 %if 0%{?rhel} == 7
 %doc UPGRADE-NOTES-1.6-to-1.10
 %endif
 %{_datadir}/nginx/html/*
 %{_bindir}/nginx-upgrade
-%{_sbindir}/nginx
 %{_datadir}/vim/vimfiles/ftdetect/nginx.vim
 %{_datadir}/vim/vimfiles/ftplugin/nginx.vim
 %{_datadir}/vim/vimfiles/syntax/nginx.vim
@@ -505,6 +509,11 @@ fi
 %{_mandir}/man8/nginx.8*
 %{_mandir}/man8/nginx-upgrade.8*
 %{_unitdir}/nginx.service
+
+%files core
+%license LICENSE
+%doc CHANGES README README.dynamic
+%{_sbindir}/nginx
 %config(noreplace) %{_sysconfdir}/nginx/fastcgi.conf
 %config(noreplace) %{_sysconfdir}/nginx/fastcgi.conf.default
 %config(noreplace) %{_sysconfdir}/nginx/fastcgi_params
@@ -578,6 +587,9 @@ fi
 
 
 %changelog
+* Thu Mar 24 2022 Honza Horak <hhorak@redhat.com> - 1:1.20.2-3
+- Introduce core sub-package for having a daemon only with a minimal footprint
+
 * Thu Jan 20 2022 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.20.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
 
