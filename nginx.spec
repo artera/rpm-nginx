@@ -130,6 +130,7 @@ Summary: nginx minimal core
 %if 0%{?with_mailcap_mimetypes}
 Requires:          nginx-mimetypes
 %endif
+Requires:          openssl-libs
 Requires(pre):     nginx-filesystem
 
 %description core
