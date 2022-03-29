@@ -41,7 +41,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.20.2
-Release:           3%{?dist}
+Release:           4%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -105,7 +105,6 @@ Obsoletes:         nginx-mod-http-geoip <= 1:1.16
 Requires:          system-logos-httpd
 %endif
 
-Requires:          openssl
 Requires:          pcre
 Provides:          webserver
 %if 0%{?fedora} || 0%{?rhel} >= 8
@@ -588,7 +587,7 @@ fi
 
 
 %changelog
-* Thu Mar 24 2022 Honza Horak <hhorak@redhat.com> - 1:1.20.2-3
+* Thu Mar 24 2022 Honza Horak <hhorak@redhat.com> - 1:1.20.2-4
 - Introduce core sub-package for having a daemon only with a minimal footprint
 
 * Thu Jan 20 2022 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.20.2-2
