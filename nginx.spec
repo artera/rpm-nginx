@@ -40,8 +40,8 @@
 
 Name:              nginx
 Epoch:             1
-Version:           1.20.2
-Release:           4%{?dist}
+Version:           1.22.0
+Release:           1%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -55,6 +55,7 @@ Source1:           https://nginx.org/download/nginx-%{version}.tar.gz.asc
 Source2:           https://nginx.org/keys/maxim.key
 Source3:           https://nginx.org/keys/mdounin.key
 Source4:           https://nginx.org/keys/sb.key
+Source5:           https://nginx.org/keys/thresh.key
 Source10:          nginx.service
 Source11:          nginx.logrotate
 Source12:          nginx.conf
@@ -76,9 +77,6 @@ Patch0:            0001-remove-Werror-in-upstream-build-scripts.patch
 # rejected upstream: https://trac.nginx.org/nginx/ticket/1897
 Patch1:            0002-fix-PIDFile-handling.patch
 
-# Fix for CVE-2021-3618: ALPACA: Application Layer Protocol Confusion - Analyzing and Mitigating Cracks in TLS Authentication
-Patch2:            http://hg.nginx.org/nginx/raw-rev/ec1071830799
-
 BuildRequires:     make
 BuildRequires:     gcc
 BuildRequires:     gnupg2
@@ -90,7 +88,7 @@ BuildRequires:     openssl-devel
 %else
 BuildRequires:     openssl11-devel
 %endif
-BuildRequires:     pcre-devel
+BuildRequires:     pcre2-devel
 BuildRequires:     zlib-devel
 
 Requires:          nginx-filesystem = %{epoch}:%{version}-%{release}
@@ -105,7 +103,6 @@ Obsoletes:         nginx-mod-http-geoip <= 1:1.16
 Requires:          system-logos-httpd
 %endif
 
-Requires:          pcre
 Provides:          webserver
 %if 0%{?fedora} || 0%{?rhel} >= 8
 Recommends:        logrotate
@@ -235,7 +232,7 @@ Requires:          openssl-devel
 %else
 Requires:          openssl11-devel
 %endif
-Requires:          pcre-devel
+Requires:          pcre2-devel
 Requires:          perl-devel
 Requires:          perl(ExtUtils::Embed)
 Requires:          zlib-devel
@@ -246,7 +243,7 @@ Requires:          zlib-devel
 
 %prep
 # Combine all keys from upstream into one file
-cat %{S:2} %{S:3} %{S:4} > %{_builddir}/%{name}.gpg
+cat %{S:2} %{S:3} %{S:4} %{S:5} > %{_builddir}/%{name}.gpg
 %{gpgverify} --keyring='%{_builddir}/%{name}.gpg' --signature='%{SOURCE1}' --data='%{SOURCE0}'
 %autosetup -p1
 cp %{SOURCE200} %{SOURCE210} %{SOURCE10} %{SOURCE12} .
@@ -307,6 +304,7 @@ if ! ./configure \
     --with-http_flv_module \
 %if %{with geoip}
     --with-http_geoip_module=dynamic \
+    --with-stream_geoip_module=dynamic \
 %endif
     --with-http_gunzip_module \
     --with-http_gzip_static_module \
@@ -327,10 +325,11 @@ if ! ./configure \
     --with-pcre \
     --with-pcre-jit \
     --with-stream=dynamic \
+    --with-stream_realip_module \
     --with-stream_ssl_module \
     --with-stream_ssl_preread_module \
     --with-threads \
-    --with-cc-opt="%{optflags} $(pcre-config --cflags)" \
+    --with-cc-opt="%{optflags} $(pcre2-config --cflags)" \
     --with-ld-opt="$nginx_ldopts"; then
   : configure failed
   cat objs/autoconf.err
@@ -587,6 +586,13 @@ fi
 
 
 %changelog
+* Wed May 25 2022 Felix Kaechele <heffer@fedoraproject.org> - 1:1.22.0-1
+- update to 1.22.0
+- switch to pcre2
+- drop CVE-2021-3618 patch, it's upstreamed
+- add signing key of Konstantin Pavlov
+- add stream_geoip_module and stream_realip_module
+
 * Thu Mar 24 2022 Honza Horak <hhorak@redhat.com> - 1:1.20.2-4
 - Introduce core sub-package for having a daemon only with a minimal footprint
 
