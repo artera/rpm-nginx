@@ -41,7 +41,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.22.0
-Release:           1%{?dist}
+Release:           2%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -586,6 +586,9 @@ fi
 
 
 %changelog
+* Mon May 30 2022 Jitka Plesnikova <jplesnik@redhat.com> - 1:1.22.0-2
+- Perl 5.36 rebuild
+
 * Wed May 25 2022 Felix Kaechele <heffer@fedoraproject.org> - 1:1.22.0-1
 - update to 1.22.0
 - switch to pcre2
