@@ -41,7 +41,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.22.0
-Release:           2%{?dist}
+Release:           3%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 # BSD License (two clause)
@@ -128,6 +128,7 @@ Requires:          nginx-mimetypes
 %endif
 Requires:          openssl-libs
 Requires(pre):     nginx-filesystem
+Conflicts:         nginx < 1:1.20.2-4
 
 %description core
 nginx minimal core
@@ -586,6 +587,9 @@ fi
 
 
 %changelog
+* Mon Jun 27 2022 Luboš Uhliarik <luhliari@redhat.com> - 1:1.22.0-3
+- Fix nginx downgrade issue after introducing core sub-package
+
 * Mon May 30 2022 Jitka Plesnikova <jplesnik@redhat.com> - 1:1.22.0-2
 - Perl 5.36 rebuild
 
