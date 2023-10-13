@@ -56,7 +56,7 @@
 Name:              nginx
 Epoch:             1
 Version:           1.24.0
-Release:           %autorelease
+Release:           1%{?dist}
 
 Summary:           A high performance web server and reverse proxy server
 License:           BSD-2-Clause
@@ -94,6 +94,9 @@ Patch1:            0002-fix-PIDFile-handling.patch
 # downstream patch - Add ssl-pass-phrase-dialog helper script for
 # encrypted private keys with pass phrase decryption
 Patch2:            0003-add-ssl-pass-phrase-dialog.patch
+
+# CVE-2023-44487
+Patch3:            0004-HTTP2_per-iteration-stream-handling-limit.patch
 
 BuildRequires:     make
 BuildRequires:     gcc
@@ -602,7 +605,3 @@ fi
 %{_rpmmacrodir}/macros.nginxmods
 %{_fileattrsdir}/nginxmods.attr
 %{nginx_srcdir}/
-
-
-%changelog
-%autochangelog
