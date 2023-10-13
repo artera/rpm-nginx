@@ -146,6 +146,14 @@ Requires:          nginx-mimetypes
 Requires:          openssl%{?openssl_pkgversion}-libs
 Requires(pre):     nginx-filesystem
 Conflicts:         nginx < 1:1.20.2-4
+%if %{with geoip}
+Conflicts:         nginx-mod-http-geoip < %{epoch}:%{version}-%{release}
+%endif
+Conflicts:         nginx-mod-http-image-filter < %{epoch}:%{version}-%{release}
+Conflicts:         nginx-mod-http-perl < %{epoch}:%{version}-%{release}
+Conflicts:         nginx-mod-http-xslt-filter < %{epoch}:%{version}-%{release}
+Conflicts:         nginx-mod-mail < %{epoch}:%{version}-%{release}
+Conflicts:         nginx-mod-stream < %{epoch}:%{version}-%{release}
 
 %description core
 nginx minimal core
